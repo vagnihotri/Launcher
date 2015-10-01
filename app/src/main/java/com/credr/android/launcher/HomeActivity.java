@@ -2,7 +2,6 @@ package com.credr.android.launcher;
 
 import android.app.Activity;
 import android.app.ActivityManager;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,7 +10,6 @@ import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -53,7 +51,11 @@ public class HomeActivity extends Activity {
                 if(Utils.isLockingModeActive(HomeActivity.this)) {
                     infoView.setText("Locking Mode Turned Off");
                     editor.putBoolean(Utils.PREF_LOCKING_MODE, false);
-                    getPackageManager().clearPackagePreferredActivities(getPackageName());
+                    try {
+                        getPackageManager().clearPackagePreferredActivities(getPackageName());
+                    } catch (SecurityException e) {
+                        e.printStackTrace();
+                    }
                     //resetPreferredLauncherAndOpenChooser(HomeActivity.this);
                 } else {
                     infoView.setText("Locking Mode Turned On");
@@ -180,7 +182,7 @@ public class HomeActivity extends Activity {
             appInfo.name = resolveInfo.activityInfo.packageName;
             logInfo(appInfo.name);
             appInfo.icon = resolveInfo.activityInfo.loadIcon(manager);
-            if(Utils.isAppInAccessList(HomeActivity.this, appInfo.name.toString()))
+            if(Utils.isAppInAccessList(HomeActivity.this, appInfo.name.toString()) && !appInfo.name.toString().equalsIgnoreCase("com.android.settings"))
                 appInfoList.add(appInfo);
         }
     }
@@ -196,37 +198,6 @@ public class HomeActivity extends Activity {
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if(keyCode==KeyEvent.KEYCODE_HOME){
-            //Start Launcher
-            if (!sharedPreferences.getBoolean(Utils.PREF_LOCKING_MODE, false)) {
-                //openApp(HomeActivity.this, "com.android.launcher");
-                Intent i = manager.getLaunchIntentForPackage("com.android.launcher");
-                HomeActivity.this.startActivity(i);
-            }
-
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-
-//    public static boolean openApp(Context context, String packageName) {
-//        PackageManager manager = context.getPackageManager();
-//        try {
-//            Intent i = manager.getLaunchIntentForPackage(packageName);
-//            if (i == null) {
-//                return false;
-//                //throw new PackageManager.NameNotFoundException();
-//            }
-//            i.addCategory(Intent.CATEGORY_LAUNCHER);
-//            context.startActivity(i);
-//            return true;
-//        } catch (Exception e) {
-//            return false;
-//        }
-//    }
-
-
-    @Override
     protected void onResume() {
         super.onResume();
         if(Utils.isLockingModeActive(HomeActivity.this)) {
@@ -234,18 +205,5 @@ public class HomeActivity extends Activity {
         } else {
             infoView.setText("Locking Mode Turned Off");
         }
-    }
-
-    public static void resetPreferredLauncherAndOpenChooser(Context context) {
-        PackageManager packageManager = context.getPackageManager();
-        ComponentName componentName = new ComponentName(context, "com.android.launcher");
-        packageManager.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
-
-        Intent selector = new Intent(Intent.ACTION_MAIN);
-        selector.addCategory(Intent.CATEGORY_HOME);
-        selector.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(selector);
-
-        packageManager.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_DEFAULT, PackageManager.DONT_KILL_APP);
     }
 }
