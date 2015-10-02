@@ -1,8 +1,7 @@
 package com.credr.android.launcher;
 
 import android.app.Activity;
-import android.app.ActivityManager;
-import android.content.Context;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -17,10 +16,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.credr.android.launcher.Utils.Utils;
+import com.credr.android.launcher.fragments.LoginFragment;
 import com.credr.android.launcher.model.AppInfo;
 
 import java.util.ArrayList;
@@ -29,12 +30,9 @@ import java.util.List;
 public class HomeActivity extends Activity {
 
     GridView appGridView;
-    TextView infoView;
+    ImageButton infoView;
     SharedPreferences sharedPreferences;
-
-    /*List<String> accessList = Arrays.asList("com.whatsapp","com.android.dialer","com.android.mms",
-            "com.android.gallery3d", "com.credr.android.library","com.credr.android.credr_inspector",
-            "com.credr.android.app.connect", "com.credr.android.library", "com.credr.android.launcher");*/
+    FragmentManager fragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,26 +40,21 @@ public class HomeActivity extends Activity {
         setContentView(R.layout.activity_home);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         appGridView = (GridView)findViewById(R.id.appGrid);
-        infoView = (TextView) findViewById(R.id.infoView);
+        infoView = (ImageButton) findViewById(R.id.infoView);
         loadApps();
+        fragmentManager = getFragmentManager();
         infoView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SharedPreferences.Editor editor = sharedPreferences.edit();
                 if(Utils.isLockingModeActive(HomeActivity.this)) {
-                    infoView.setText("Locking Mode Turned Off");
-                    editor.putBoolean(Utils.PREF_LOCKING_MODE, false);
-                    try {
-                        getPackageManager().clearPackagePreferredActivities(getPackageName());
-                    } catch (SecurityException e) {
-                        e.printStackTrace();
-                    }
-                    //resetPreferredLauncherAndOpenChooser(HomeActivity.this);
+
+                    fragmentManager.beginTransaction().add(R.id.relContainer, new LoginFragment(),LoginFragment.LOGIN_FRAGMENT_TAG).commit();
                 } else {
-                    infoView.setText("Locking Mode Turned On");
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    infoView.setImageDrawable(getResources().getDrawable(R.drawable.launcher_icon, getTheme()));
                     editor.putBoolean(Utils.PREF_LOCKING_MODE, true);
+                    editor.commit();
                 }
-                editor.commit();
             }
         });
         appGridView.setAdapter(new BaseAdapter() {
@@ -131,28 +124,6 @@ public class HomeActivity extends Activity {
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        //Toast.makeText(this, "Paused Launcher", Toast.LENGTH_LONG).show();
-        logInfo("Paused Launcher");
-
-        final ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        final List<ActivityManager.RunningAppProcessInfo> recentTasks = activityManager.getRunningAppProcesses();
-        for(ActivityManager.RunningAppProcessInfo runningAppProcessInfo : recentTasks) {
-            /*String packageName = runningAppProcessInfo.pkgList;
-            logInfo(packageName);
-            if(!accessList.contains(packageName))
-                activityManager.killBackgroundProcesses(packageName);*/
-            //logInfo(runningAppProcessInfo.pkgList);
-            for (String packageName : runningAppProcessInfo.pkgList) {
-                logInfo(packageName);
-                if(!Utils.isAppInAccessList(HomeActivity.this,packageName))
-                    logInfo("Not Found In Access List");
-            }
-        }
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -175,7 +146,6 @@ public class HomeActivity extends Activity {
         Intent intent = new Intent(Intent.ACTION_MAIN, null);
         intent.addCategory(Intent.CATEGORY_LAUNCHER);
         List<ResolveInfo> availableApps = manager.queryIntentActivities(intent,0);
-        logInfo("App count : " + availableApps.size());
         for(ResolveInfo resolveInfo : availableApps) {
             AppInfo appInfo = new AppInfo();
             appInfo.label = resolveInfo.loadLabel(manager);
@@ -188,22 +158,29 @@ public class HomeActivity extends Activity {
     }
 
     void logInfo(Object info) {
-        //infoView.setText(infoView.getText() + " ## " + String.valueOf(info));
         Log.d("Apps", String.valueOf(info));
     }
 
     @Override
     public void onBackPressed() {
-
+        dismissLoginFragment();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         if(Utils.isLockingModeActive(HomeActivity.this)) {
-            infoView.setText("Locking Mode Turned On");
+            infoView.setImageDrawable(getResources().getDrawable(R.drawable.launcher_icon, getTheme()));
         } else {
-            infoView.setText("Locking Mode Turned Off");
+            infoView.setImageDrawable(getResources().getDrawable(R.drawable.unlock, getTheme()));
+        }
+        dismissLoginFragment();
+    }
+
+    private void dismissLoginFragment() {
+        LoginFragment loginFragment = (LoginFragment)fragmentManager.findFragmentByTag(LoginFragment.LOGIN_FRAGMENT_TAG);
+        if(loginFragment!=null && loginFragment.isVisible()) {
+            loginFragment.dismiss();
         }
     }
 }

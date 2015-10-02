@@ -8,6 +8,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+        <meta-data android:name="SERVER" android:value="http://dev2.creder.asia" />
         <activity
             android:name=".HomeActivity"
             android:label="@string/app_name"
@@ -24,5 +25,9 @@
             </intent-filter>
         </activity>
         <service android:name=".service.AppListenerService"/>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="c805aefb5c5c2d9cfec745fc47c37ee3a4985180" />
     </application>
+    <uses-permission android:name="android.permission.INTERNET" />
 </manifest>
