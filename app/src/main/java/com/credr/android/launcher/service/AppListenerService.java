@@ -23,7 +23,7 @@ public class AppListenerService extends Service {
         return null;
     }
 
-    private static final long INTERVAL = TimeUnit.SECONDS.toMillis(1); // periodic interval to check in seconds -> 2 seconds
+    private static final long INTERVAL = TimeUnit.SECONDS.toMillis(1);
     private static final String TAG = AppListenerService.class.getSimpleName();
 
     private Thread t = null;
@@ -98,18 +98,13 @@ public class AppListenerService extends Service {
             }
             if(currentInfo != null) {
                 for (String packageName : currentInfo.pkgList) {
-                    if(!Utils.isAppInAccessList(mContext,packageName) || packageName.equalsIgnoreCase("com.credr.credrlauncherapp")){
-                        Log.d("AppFore","*** " + packageName + " detected ***");
+                    if(!Utils.isAppInAccessList(mContext,packageName) || packageName.equalsIgnoreCase("com.android.systemui.recent.RecentsActivity")){
                         minimizeApp();
                     }
                 }
             }
         } else {
-        /*ActivityManager am = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
 
-        List<ActivityManager.RunningTaskInfo> taskInfo = am.getRunningTasks(1);
-        ComponentName componentInfo = taskInfo.get(0).topActivity;
-        return (!mContext.getApplicationContext().getPackageName().equals(componentInfo.getPackageName()));*/
         }
     }
 

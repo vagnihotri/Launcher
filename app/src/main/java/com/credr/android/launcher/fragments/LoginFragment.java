@@ -32,7 +32,7 @@ public class LoginFragment extends DialogFragment implements View.OnClickListene
     private Context mContext;
     private EditText username, password;
     private RelativeLayout progressBar;
-    public static String LOGIN_FRAGMENT_TAG = "Login";
+    public static final String LOGIN_FRAGMENT_TAG = "Login";
 
     @Override
     public void onAttach(Activity activity) {
