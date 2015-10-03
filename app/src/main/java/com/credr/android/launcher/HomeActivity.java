@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -47,7 +48,6 @@ public class HomeActivity extends Activity {
             @Override
             public void onClick(View view) {
                 if(Utils.isLockingModeActive(HomeActivity.this)) {
-
                     fragmentManager.beginTransaction().add(R.id.relContainer, new LoginFragment(),LoginFragment.LOGIN_FRAGMENT_TAG).commit();
                 } else {
                     SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -100,6 +100,7 @@ public class HomeActivity extends Activity {
                     @Override
                     public void onClick(View v) {
                         Intent i = manager.getLaunchIntentForPackage(getItem(position).name.toString());
+                        if(getItem(position).data != null) i.setData(Uri.parse(getItem(position).data));
                         HomeActivity.this.startActivity(i);
                     }
                 });
@@ -155,6 +156,13 @@ public class HomeActivity extends Activity {
             if(Utils.isAppInAccessList(HomeActivity.this, appInfo.name.toString()) && !appInfo.name.toString().equalsIgnoreCase("com.android.settings"))
                 appInfoList.add(appInfo);
         }
+        //Adding CredR homepage
+        AppInfo appInfo = new AppInfo();
+        appInfo.label = "CredR Homepage";
+        appInfo.name = "com.android.chrome";
+        appInfo.data = "http://www.credr.com";
+        appInfo.icon = getResources().getDrawable(android.R.drawable.ic_menu_mapmode,getTheme());
+        appInfoList.add(appInfo);
     }
 
     void logInfo(Object info) {

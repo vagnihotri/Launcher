@@ -6,4 +6,5 @@ public class AppInfo {
     public CharSequence label;
     public CharSequence name;
     public Drawable icon;
+    public String data;
 }
