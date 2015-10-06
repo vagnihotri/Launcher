@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -20,6 +19,7 @@ import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.credr.android.launcher.Utils.Utils;
 import com.credr.android.launcher.fragments.LoginFragment;
@@ -54,6 +54,7 @@ public class HomeActivity extends Activity {
                     infoView.setImageDrawable(getResources().getDrawable(R.drawable.launcher_icon, getTheme()));
                     editor.putBoolean(Utils.PREF_LOCKING_MODE, true);
                     editor.commit();
+                    Toast.makeText(HomeActivity.this, "Please set launcher as default for home and settings immediately", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -100,7 +101,10 @@ public class HomeActivity extends Activity {
                     @Override
                     public void onClick(View v) {
                         Intent i = manager.getLaunchIntentForPackage(getItem(position).name.toString());
-                        if(getItem(position).data != null) i.setData(Uri.parse(getItem(position).data));
+                        if(getItem(position).data != null) {
+                            i = new Intent(HomeActivity.this, WebViewActivity.class);
+                            i.putExtra(WebViewActivity.URL_EXTRA, getItem(position).data);
+                        }
                         HomeActivity.this.startActivity(i);
                     }
                 });

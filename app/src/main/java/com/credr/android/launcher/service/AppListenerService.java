@@ -103,8 +103,6 @@ public class AppListenerService extends Service {
                     }
                 }
             }
-        } else {
-
         }
     }
 

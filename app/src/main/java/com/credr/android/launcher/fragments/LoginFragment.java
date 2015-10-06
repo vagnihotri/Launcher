@@ -72,7 +72,7 @@ public class LoginFragment extends DialogFragment implements View.OnClickListene
             public void success(LoginResponse loginResponse, Response response) {
                 progressBar.setVisibility(View.GONE);
                 loginResponse.user.save();
-                if(loginResponse.user.is_fhd) {
+                if(loginResponse.user.is_rm) {
                     mContext.getPackageManager().clearPackagePreferredActivities(mContext.getPackageName());
                     SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(mContext).edit();
                     editor.putBoolean(Utils.PREF_LOCKING_MODE, false);
@@ -80,7 +80,7 @@ public class LoginFragment extends DialogFragment implements View.OnClickListene
                     Toast.makeText(mContext, "Locking mode turned off", Toast.LENGTH_SHORT).show();
                     getActivity().finish();
                 } else {
-                    Toast.makeText(mContext, "Not FHD", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "You do not have permissions", Toast.LENGTH_SHORT).show();
                     dismiss();
                 }
             }
