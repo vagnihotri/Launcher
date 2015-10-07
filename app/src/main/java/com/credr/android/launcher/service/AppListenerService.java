@@ -99,7 +99,8 @@ public class AppListenerService extends Service {
             if(currentInfo != null) {
                 for (String packageName : currentInfo.pkgList) {
                     if(!Utils.isAppInAccessList(mContext,packageName) || packageName.equalsIgnoreCase("com.android.systemui.recent.RecentsActivity")){
-                        minimizeApp();
+                        if (!packageName.equalsIgnoreCase("com.google.android.play.games"))
+                            minimizeApp();
                     }
                 }
             }
