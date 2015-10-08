@@ -49,7 +49,12 @@ public class LoginFragment extends DialogFragment implements View.OnClickListene
         progressBar = (RelativeLayout) cView.findViewById(R.id.progressBarContainer);
         Button submitButton = (Button) cView.findViewById(R.id.btnLogin);
         submitButton.setOnClickListener(this);
+        if(!Utils.isNetworkConnectionPresent(mContext)) noNetworkPopup();
         return cView;
+    }
+
+    private void noNetworkPopup() {
+        Toast.makeText(mContext,"No network, please check network connectivity",Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -67,6 +72,10 @@ public class LoginFragment extends DialogFragment implements View.OnClickListene
     }
 
     private void doLogin(final String login, String pass) {
+        if(!Utils.isNetworkConnectionPresent(mContext)) {
+            noNetworkPopup();
+            return;
+        }
         REST.API.login(new Credentials(login, pass), new Callback<LoginResponse>() {
             @Override
             public void success(LoginResponse loginResponse, Response response) {
