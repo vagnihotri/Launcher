@@ -157,7 +157,7 @@ public class HomeActivity extends Activity {
             appInfo.name = resolveInfo.activityInfo.packageName;
             logInfo(appInfo.name);
             appInfo.icon = resolveInfo.activityInfo.loadIcon(manager);
-            if(Utils.isAppInAccessList(HomeActivity.this, appInfo.name.toString()) && !appInfo.name.toString().equalsIgnoreCase("com.android.settings"))
+            if(Utils.isAppInAccessList(HomeActivity.this, appInfo.name.toString()) && !appInfo.name.toString().equalsIgnoreCase("com.android.settings") && !appInfo.name.toString().equalsIgnoreCase("com.credr.android.launcher"))
                 appInfoList.add(appInfo);
         }
         //Adding CredR homepage
