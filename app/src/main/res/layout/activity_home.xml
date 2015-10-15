@@ -22,7 +22,7 @@
         android:layout_below="@+id/infoView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:columnWidth="80dp"
+        android:columnWidth="60dp"
         android:numColumns="auto_fit"
         tools:listitem="@layout/app_item"
         android:scrollbars="none"/>
