@@ -35,4 +35,5 @@
             android:value="c805aefb5c5c2d9cfec745fc47c37ee3a4985180" />
     </application>
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 </manifest>

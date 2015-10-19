@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.credr.android.launcher.HomeActivity;
 import com.credr.android.launcher.R;
 import com.credr.android.launcher.Utils.Utils;
 import com.credr.android.library.connection.REST;
@@ -82,11 +83,16 @@ public class LoginFragment extends DialogFragment implements View.OnClickListene
                 progressBar.setVisibility(View.GONE);
                 loginResponse.user.save();
                 if(loginResponse.user.is_rm) {
-                    mContext.getPackageManager().clearPackagePreferredActivities(mContext.getPackageName());
+                    try {
+                        mContext.getPackageManager().clearPackagePreferredActivities(mContext.getPackageName());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(mContext).edit();
                     editor.putBoolean(Utils.PREF_LOCKING_MODE, false);
                     editor.commit();
                     Toast.makeText(mContext, "Locking mode turned off", Toast.LENGTH_SHORT).show();
+                    ((HomeActivity)getActivity()).unlock();
                     getActivity().finish();
                 } else {
                     Toast.makeText(mContext, "You do not have permissions", Toast.LENGTH_SHORT).show();

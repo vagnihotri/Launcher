@@ -23,7 +23,7 @@ public class AppListenerService extends Service {
         return null;
     }
 
-    private static final long INTERVAL = TimeUnit.SECONDS.toMillis(1);
+    private static final long INTERVAL = TimeUnit.MILLISECONDS.toMillis(200);
     private static final String TAG = AppListenerService.class.getSimpleName();
 
     private Thread t = null;
@@ -98,9 +98,8 @@ public class AppListenerService extends Service {
             }
             if(currentInfo != null) {
                 for (String packageName : currentInfo.pkgList) {
-                    if(!Utils.isAppInAccessList(mContext,packageName) || packageName.equalsIgnoreCase("com.android.systemui.recent.RecentsActivity")){
-                        if (!packageName.equalsIgnoreCase("com.google.android.play.games"))
-                            minimizeApp();
+                    if(!Utils.isAppInAccessList(mContext,packageName)) {
+                        minimizeApp();
                     }
                 }
             }
