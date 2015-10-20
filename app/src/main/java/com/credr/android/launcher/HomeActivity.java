@@ -47,7 +47,11 @@ public class HomeActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        if(Utils.isLockingModeActive(HomeActivity.this)) lock(this);
+        if(Utils.isLockingModeActive(HomeActivity.this)) {
+            lock(this);
+        } else {
+            unlock();
+        }
         appGridView = (GridView)findViewById(R.id.appGrid);
         infoView = (ImageButton) findViewById(R.id.infoView);
         loadApps();
