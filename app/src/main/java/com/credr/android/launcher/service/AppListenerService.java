@@ -99,7 +99,9 @@ public class AppListenerService extends Service {
             if(currentInfo != null) {
                 for (String packageName : currentInfo.pkgList) {
                     if(!Utils.isAppInAccessList(mContext,packageName)) {
-                        minimizeApp();
+                        if(!packageName.equalsIgnoreCase("com.android.gallery3d") && !packageName.equalsIgnoreCase("com.google.android.apps.plus")) {
+                            minimizeApp();
+                        }
                     }
                 }
             }
