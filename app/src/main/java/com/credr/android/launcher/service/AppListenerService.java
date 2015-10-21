@@ -29,6 +29,7 @@ public class AppListenerService extends Service {
     private Thread t = null;
     private Context mContext = null;
     private boolean running = false;
+    private String appPackageName = "";
 
     @Override
     public void onDestroy() {
@@ -42,7 +43,7 @@ public class AppListenerService extends Service {
         Log.i(TAG, "Starting service 'AppListenerService'");
         running = true;
         mContext = this;
-
+        appPackageName = mContext.getPackageName();
         // start a thread that periodically exits blocked apps
         t = new Thread(new Runnable() {
             @Override
@@ -99,9 +100,7 @@ public class AppListenerService extends Service {
             if(currentInfo != null) {
                 for (String packageName : currentInfo.pkgList) {
                     if(!Utils.isAppInAccessList(mContext,packageName)) {
-                        if(!packageName.equalsIgnoreCase("com.android.gallery3d") && !packageName.equalsIgnoreCase("com.google.android.apps.plus")) {
-                            minimizeApp();
-                        }
+                        minimizeApp(packageName);
                     }
                 }
             }
@@ -110,7 +109,12 @@ public class AppListenerService extends Service {
 
 
 
-    private void minimizeApp() {
+    private void minimizeApp(String packageName) {
+        if(     packageName.equalsIgnoreCase("com.android.gallery3d") ||
+                packageName.equalsIgnoreCase("com.google.android.apps.plus") ||
+                packageName.equalsIgnoreCase("com.google.android.gms") ||
+                packageName.equalsIgnoreCase("com.credr.android.library") ||
+                packageName.equalsIgnoreCase(appPackageName)) return;
         Intent intent = new Intent();
         intent
                 .setAction(Intent.ACTION_MAIN)
