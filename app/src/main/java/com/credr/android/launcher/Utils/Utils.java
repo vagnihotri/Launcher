@@ -73,7 +73,7 @@ public class Utils {
     public static boolean isAppInAccessList(Context context, String packageName) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         Set<String> accessList = sp.getStringSet(PREF_ACCESS_LIST, new HashSet<String>());
-        if(accessList.contains(packageName) || packageName.equalsIgnoreCase("com.lenovo.keyguard.settings") || packageName.equalsIgnoreCase("com.android.settings") || packageName.equalsIgnoreCase("android") || packageName.equalsIgnoreCase("com.android.systemui"))
+        if(accessList.contains(packageName) || packageName.equalsIgnoreCase("com.lenovo.keyguard.settings") || packageName.equalsIgnoreCase("com.android.settings") || packageName.equalsIgnoreCase("android") || packageName.equalsIgnoreCase("com.android.systemui") || packageName.equalsIgnoreCase("com.android.documentsui"))
             return true;
         else
             return false;
