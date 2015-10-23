@@ -189,7 +189,7 @@ public class HomeActivity extends Activity {
         AppInfo appInfo = new AppInfo();
         appInfo.label = "CredR Homepage";
         appInfo.name = "com.android.chrome";
-        appInfo.data = "http://www.credr.com";
+        appInfo.data = "http://www.credr.com/#seller";
         appInfo.icon = getResources().getDrawable(R.drawable.credr,getTheme());
         appInfoList.add(appInfo);
 
