@@ -116,7 +116,12 @@ public class LoginFragment extends DialogFragment implements View.OnClickListene
                             case 401:  {
                                 message = ((LoginResponse)error.getBody()).message;
                             } break;
-                            default: message = (String)error.getBodyAs(String.class);
+                            default:
+                                try {
+                                    message = (String)error.getBodyAs(String.class);
+                                } catch (Exception e) {
+                                    message = "Server Error";
+                                }
                         }
                     }
                 }
