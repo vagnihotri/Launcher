@@ -114,6 +114,7 @@ public class AppListenerService extends Service {
                 packageName.equalsIgnoreCase("com.google.android.apps.plus") ||
                 packageName.equalsIgnoreCase("com.google.android.gms") ||
                 packageName.equalsIgnoreCase("com.credr.android.library") ||
+                packageName.equalsIgnoreCase("com.google.android.play.games") ||
                 packageName.equalsIgnoreCase(appPackageName)) return;
         Intent intent = new Intent();
         intent
