@@ -9,7 +9,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-        <meta-data android:name="SERVER" android:value="http://connect.creder.asia" />
+        <meta-data android:name="SERVER" android:value="http://www.credr.com" />
         <activity
             android:name=".HomeActivity"
             android:label="@string/app_name"

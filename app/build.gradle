@@ -23,8 +23,8 @@ android {
         applicationId "com.credr.android.launcher"
         minSdkVersion 21
         targetSdkVersion 22
-        versionCode 4
-        versionName "0.1.3"
+        versionCode 1
+        versionName "1.0.0"
     }
     buildTypes {
         release {
