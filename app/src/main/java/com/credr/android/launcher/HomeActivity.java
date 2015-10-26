@@ -2,23 +2,19 @@ package com.credr.android.launcher;
 
 import android.app.Activity;
 import android.app.FragmentManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageButton;
@@ -26,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.credr.android.launcher.Utils.CustomViewGroup;
 import com.credr.android.launcher.Utils.Utils;
 import com.credr.android.launcher.fragments.LoginFragment;
 import com.credr.android.launcher.model.AppInfo;
@@ -39,8 +36,6 @@ public class HomeActivity extends Activity {
     ImageButton infoView;
     SharedPreferences sharedPreferences;
     FragmentManager fragmentManager;
-    WindowManager wManager;
-    CustomViewGroup lockView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,9 +43,9 @@ public class HomeActivity extends Activity {
         setContentView(R.layout.activity_home);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         if(Utils.isLockingModeActive(HomeActivity.this)) {
-            lock(this);
+            CustomViewGroup.getInstance(this).lock();
         } else {
-            unlock();
+            CustomViewGroup.getInstance(this).unlock();
         }
         appGridView = (GridView)findViewById(R.id.appGrid);
         infoView = (ImageButton) findViewById(R.id.infoView);
@@ -66,7 +61,7 @@ public class HomeActivity extends Activity {
                     infoView.setImageDrawable(getResources().getDrawable(R.drawable.launcher_icon, getTheme()));
                     editor.putBoolean(Utils.PREF_LOCKING_MODE, true);
                     editor.commit();
-                    lock(HomeActivity.this);
+                    CustomViewGroup.getInstance(HomeActivity.this).lock();
                     Toast.makeText(HomeActivity.this, "Please set launcher as default for home immediately", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -239,52 +234,6 @@ public class HomeActivity extends Activity {
         LoginFragment loginFragment = (LoginFragment)fragmentManager.findFragmentByTag(LoginFragment.LOGIN_FRAGMENT_TAG);
         if(loginFragment!=null && loginFragment.isVisible()) {
             loginFragment.dismiss();
-        }
-    }
-
-    private class CustomViewGroup extends ViewGroup {
-        private Context context;
-
-        public CustomViewGroup(Context context) {
-            super(context);
-            this.context = context;
-        }
-
-        @Override
-        protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        }
-        @Override
-        public boolean onInterceptTouchEvent(MotionEvent ev) {
-            return true;
-        }
-    }
-
-    public void lock(Activity activity) {
-
-        //lock top notification/status bar
-        wManager = ((WindowManager) activity.getApplicationContext()
-                .getSystemService(Context.WINDOW_SERVICE));
-
-        WindowManager.LayoutParams topBlockParams = new WindowManager.LayoutParams();
-        topBlockParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ERROR;
-        topBlockParams.gravity = Gravity.TOP;
-        topBlockParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|
-                WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL |
-                WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
-        topBlockParams.width = WindowManager.LayoutParams.MATCH_PARENT;
-        topBlockParams.height = (int) (50 * activity.getResources()
-                .getDisplayMetrics().scaledDensity);
-        topBlockParams.format = PixelFormat.TRANSPARENT;
-
-        lockView = new CustomViewGroup(activity);
-        wManager.addView(lockView, topBlockParams);
-    }
-
-    public void unlock() {
-        if (lockView!=null) {
-            if (lockView.isShown()) {
-                wManager.removeView(lockView);
-            }
         }
     }
 }
