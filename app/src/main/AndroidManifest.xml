@@ -29,6 +29,9 @@
         <activity
             android:name=".WebViewActivity"
             android:theme="@style/LauncherTheme"/>
+        <activity
+            android:name=".SettingsActivity"
+            android:theme="@style/LauncherTheme"/>
         <service android:name=".service.AppListenerService"/>
         <meta-data
             android:name="io.fabric.ApiKey"
