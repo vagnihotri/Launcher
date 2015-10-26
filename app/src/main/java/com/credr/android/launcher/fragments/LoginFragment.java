@@ -3,9 +3,8 @@ package com.credr.android.launcher.fragments;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Context;
-import android.content.SharedPreferences;
+import android.content.Intent;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.credr.android.launcher.R;
-import com.credr.android.launcher.Utils.CustomViewGroup;
+import com.credr.android.launcher.SettingsActivity;
 import com.credr.android.launcher.Utils.Utils;
 import com.credr.android.library.connection.REST;
 import com.credr.android.library.connection.model.request.Credentials;
@@ -73,6 +72,10 @@ public class LoginFragment extends DialogFragment implements View.OnClickListene
     }
 
     private void doLogin(final String login, String pass) {
+        if(getActivity() != null) {
+            startActivity(new Intent(getActivity(), SettingsActivity.class));
+            return;
+        }
         if(!Utils.isNetworkConnectionPresent(mContext)) {
             noNetworkPopup();
             return;
@@ -83,17 +86,7 @@ public class LoginFragment extends DialogFragment implements View.OnClickListene
                 progressBar.setVisibility(View.GONE);
                 loginResponse.user.save();
                 if(loginResponse.user.is_rm) {
-                    try {
-                        mContext.getPackageManager().clearPackagePreferredActivities(mContext.getPackageName());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(mContext).edit();
-                    editor.putBoolean(Utils.PREF_LOCKING_MODE, false);
-                    editor.commit();
-                    Toast.makeText(mContext, "Locking mode turned off", Toast.LENGTH_SHORT).show();
-                    CustomViewGroup.getInstance(getActivity()).unlock();
-                    getActivity().finish();
+                    startActivity(new Intent(getActivity(),SettingsActivity.class));
                 } else {
                     Toast.makeText(mContext, "You do not have permissions", Toast.LENGTH_SHORT).show();
                     dismiss();
