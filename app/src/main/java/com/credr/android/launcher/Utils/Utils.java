@@ -84,6 +84,13 @@ public class Utils {
         return sp.contains(key);
     }
 
+    public static void setAccessList (Context context, Set<String> accessList) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putStringSet(PREF_ACCESS_LIST, accessList);
+        editor.commit();
+    }
+
     public static boolean isNetworkConnectionPresent(Context context) {
         ConnectivityManager cm =
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);

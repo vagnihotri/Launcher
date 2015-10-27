@@ -72,10 +72,6 @@ public class LoginFragment extends DialogFragment implements View.OnClickListene
     }
 
     private void doLogin(final String login, String pass) {
-        if(getActivity() != null) {
-            startActivity(new Intent(getActivity(), SettingsActivity.class));
-            return;
-        }
         if(!Utils.isNetworkConnectionPresent(mContext)) {
             noNetworkPopup();
             return;

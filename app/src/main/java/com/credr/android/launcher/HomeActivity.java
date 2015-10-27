@@ -49,13 +49,12 @@ public class HomeActivity extends Activity {
         }
         appGridView = (GridView)findViewById(R.id.appGrid);
         infoView = (ImageButton) findViewById(R.id.infoView);
-        loadApps();
         fragmentManager = getFragmentManager();
         infoView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(Utils.isLockingModeActive(HomeActivity.this)) {
-                    fragmentManager.beginTransaction().add(R.id.relContainer, new LoginFragment(),LoginFragment.LOGIN_FRAGMENT_TAG).commit();
+                if (Utils.isLockingModeActive(HomeActivity.this)) {
+                    fragmentManager.beginTransaction().add(R.id.relContainer, new LoginFragment(), LoginFragment.LOGIN_FRAGMENT_TAG).commit();
                 } else {
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     infoView.setImageDrawable(getResources().getDrawable(R.drawable.launcher_icon, getTheme()));
@@ -64,72 +63,6 @@ public class HomeActivity extends Activity {
                     CustomViewGroup.getInstance(HomeActivity.this).lock();
                     Toast.makeText(HomeActivity.this, "Please set launcher as default for home immediately", Toast.LENGTH_SHORT).show();
                 }
-            }
-        });
-        appGridView.setAdapter(new BaseAdapter() {
-            @Override
-            public int getCount() {
-                return appInfoList.size();
-            }
-
-            @Override
-            public AppInfo getItem(int position) {
-                return appInfoList.get(position);
-            }
-
-            @Override
-            public long getItemId(int position) {
-                return 0;
-            }
-
-            class Holder {
-                ImageView icon;
-                TextView label;
-
-                Holder(View view) {
-                    icon = (ImageView) view.findViewById(R.id.icon);
-                    label = (TextView) view.findViewById(R.id.label);
-                    view.setTag(this);
-                }
-            }
-
-            @Override
-            public View getView(final int position, View convertView, ViewGroup parent) {
-                if (convertView == null) {
-                    convertView = getLayoutInflater().inflate(R.layout.app_item, null);
-                    new Holder(convertView);
-                }
-
-                Holder holder = (Holder) convertView.getTag();
-                AppInfo appInfo = getItem(position);
-                holder.icon.setImageDrawable(appInfo.icon);
-                holder.label.setText(appInfo.label);
-
-                convertView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent i = manager.getLaunchIntentForPackage(getItem(position).name.toString());
-                        if(getItem(position).data != null) {
-                            String label = getItem(position).label.toString();
-                            if(label.contains("WiFi")) {
-                                startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
-                                return;
-                            } else if(label.contains("Data")) {
-                                startActivity(new Intent(Settings.ACTION_APN_SETTINGS));
-                                return;
-                            } else if(label.contains("GPS")) {
-                                startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-                                return;
-                            } else {
-                                i = new Intent(HomeActivity.this, WebViewActivity.class);
-                                i.putExtra(WebViewActivity.URL_EXTRA, getItem(position).data);
-                            }
-                        }
-                        HomeActivity.this.startActivity(i);
-                    }
-                });
-
-                return convertView;
             }
         });
 
@@ -228,6 +161,73 @@ public class HomeActivity extends Activity {
             infoView.setImageDrawable(getResources().getDrawable(R.drawable.unlock, getTheme()));
         }
         dismissLoginFragment();
+        loadApps();
+        appGridView.setAdapter(new BaseAdapter() {
+            @Override
+            public int getCount() {
+                return appInfoList.size();
+            }
+
+            @Override
+            public AppInfo getItem(int position) {
+                return appInfoList.get(position);
+            }
+
+            @Override
+            public long getItemId(int position) {
+                return 0;
+            }
+
+            class Holder {
+                ImageView icon;
+                TextView label;
+
+                Holder(View view) {
+                    icon = (ImageView) view.findViewById(R.id.icon);
+                    label = (TextView) view.findViewById(R.id.label);
+                    view.setTag(this);
+                }
+            }
+
+            @Override
+            public View getView(final int position, View convertView, ViewGroup parent) {
+                if (convertView == null) {
+                    convertView = getLayoutInflater().inflate(R.layout.app_item, null);
+                    new Holder(convertView);
+                }
+
+                Holder holder = (Holder) convertView.getTag();
+                AppInfo appInfo = getItem(position);
+                holder.icon.setImageDrawable(appInfo.icon);
+                holder.label.setText(appInfo.label);
+
+                convertView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent i = manager.getLaunchIntentForPackage(getItem(position).name.toString());
+                        if (getItem(position).data != null) {
+                            String label = getItem(position).label.toString();
+                            if (label.contains("WiFi")) {
+                                startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                                return;
+                            } else if (label.contains("Data")) {
+                                startActivity(new Intent(Settings.ACTION_APN_SETTINGS));
+                                return;
+                            } else if (label.contains("GPS")) {
+                                startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                                return;
+                            } else {
+                                i = new Intent(HomeActivity.this, WebViewActivity.class);
+                                i.putExtra(WebViewActivity.URL_EXTRA, getItem(position).data);
+                            }
+                        }
+                        HomeActivity.this.startActivity(i);
+                    }
+                });
+
+                return convertView;
+            }
+        });
     }
 
     private void dismissLoginFragment() {
