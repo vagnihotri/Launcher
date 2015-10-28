@@ -162,12 +162,19 @@ public class SettingsActivity extends Activity implements View.OnClickListener{
                 holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                        String appName = (String)holder.checkBox.getTag();
+                        String appName = (String) holder.checkBox.getTag();
                         if (isChecked) {
-                            if(appName != null)packageList.add(appName);
+                            if (appName != null) packageList.add(appName);
                         } else {
-                            if(appName != null)packageList.remove(appName);
+                            if (appName != null) packageList.remove(appName);
                         }
+                    }
+                });
+                convertView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        CheckBox checkBox = (CheckBox) view.findViewById(R.id.app_checkbox);
+                        checkBox.setChecked(!checkBox.isChecked());
                     }
                 });
                 return convertView;
