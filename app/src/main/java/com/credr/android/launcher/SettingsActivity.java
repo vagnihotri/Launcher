@@ -4,13 +4,11 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.ComponentName;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -85,16 +83,14 @@ public class SettingsActivity extends Activity implements View.OnClickListener{
                 launchPlayStore();
                 break;
             case R.id.exit_layout:
+                Utils.setLockingMode(this, false);
+                Toast.makeText(this, "Locking mode turned off", Toast.LENGTH_SHORT).show();
+                CustomViewGroup.getInstance(this).unlock();
                 try {
                     getPackageManager().clearPackagePreferredActivities(getPackageName());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
-                editor.putBoolean(Utils.PREF_LOCKING_MODE, false);
-                editor.commit();
-                Toast.makeText(this, "Locking mode turned off", Toast.LENGTH_SHORT).show();
-                CustomViewGroup.getInstance(this).unlock();
                 finishAffinity();
                 break;
         }
