@@ -102,11 +102,13 @@ public class AppListenerService extends Service {
                         minimizeApp();
                     }
                 }
+            } else {
+                if(!Utils.isAppInAccessListContents(mContext,Utils.getForegroundApp())) {
+                    minimizeApp();
+                }
             }
         }
     }
-
-
 
     private void minimizeApp() {
         Intent intent = new Intent();
