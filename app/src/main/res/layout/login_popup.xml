@@ -47,7 +47,7 @@
             android:layout_marginBottom="10dp"
             android:gravity="center_vertical"
             android:hint="Username"
-            android:inputType="textNoSuggestions"
+            android:inputType="textEmailAddress"
             android:singleLine="true"
             android:textColor="@color/input_login_text"
             android:textColorHint="@color/input_login_hint"/>

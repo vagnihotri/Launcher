@@ -5,12 +5,15 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.credr.android.launcher.R;
@@ -47,9 +50,19 @@ public class LoginFragment extends DialogFragment implements View.OnClickListene
         username = (EditText) cView.findViewById(R.id.username);
         password = (EditText) cView.findViewById(R.id.password);
         progressBar = (RelativeLayout) cView.findViewById(R.id.progressBarContainer);
-        Button submitButton = (Button) cView.findViewById(R.id.btnLogin);
+        final Button submitButton = (Button) cView.findViewById(R.id.btnLogin);
         submitButton.setOnClickListener(this);
         if(!Utils.isNetworkConnectionPresent(mContext)) noNetworkPopup();
+        password.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                if(actionId == EditorInfo.IME_ACTION_DONE) {
+                    submitButton.performClick();
+                    return true;
+                }
+                return false;
+            }
+        });
         return cView;
     }
 
@@ -66,7 +79,7 @@ public class LoginFragment extends DialogFragment implements View.OnClickListene
                 progressBar.setVisibility(View.VISIBLE);
                 doLogin(login, pass);
             } else {
-                Toast.makeText(mContext,"Please enter a login/password",Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext,"Please enter a valid login/password",Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -120,9 +133,16 @@ public class LoginFragment extends DialogFragment implements View.OnClickListene
     }
 
     private boolean isCredentialsValid(String login, String pass) {
-        if(login != null && !login.isEmpty() && pass != null && !pass.isEmpty())
-            return true;
-        else
+        if(login != null && !login.isEmpty() && pass != null && !pass.isEmpty()) {
+            String ePattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
+            java.util.regex.Pattern pattern = java.util.regex.Pattern.compile(ePattern);
+            java.util.regex.Matcher matcher = pattern.matcher(login);
+            if (matcher.matches() && (login.length() >= 3))
+                return true;
+            else
+                return false;
+        } else {
             return false;
+        }
     }
 }
