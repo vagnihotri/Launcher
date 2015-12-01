@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
+import android.service.notification.StatusBarNotification;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,6 +16,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -27,6 +29,7 @@ public class Utils {
     public static final String PREF_ACCESS_LIST = "ACCESS_LIST";
     public static final int AID_APP = 10000;
     public static final int AID_USER = 100000;
+    public static ArrayList<StatusBarNotification> notificationList = new ArrayList<>();
 
     public static String loadPreferencesJSONFromAsset(Context context) {
         String json = null;

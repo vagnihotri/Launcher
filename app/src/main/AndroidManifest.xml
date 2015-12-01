@@ -34,6 +34,12 @@
             android:name=".SettingsActivity"
             android:theme="@style/LauncherTheme"/>
         <service android:name=".service.AppListenerService"/>
+        <service android:name=".service.SbNotificationListenerService"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service>
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="c805aefb5c5c2d9cfec745fc47c37ee3a4985180" />

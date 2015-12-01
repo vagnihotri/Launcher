@@ -17,6 +17,29 @@
         android:background="@null"
         android:gravity="center"/>
 
+    <ImageButton
+        android:layout_alignParentRight="true"
+        android:id="@+id/notificationView"
+        android:src="@drawable/notification"
+        android:scaleType="fitXY"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_margin="10dp"
+        android:text="Toggle"
+        android:background="@null"/>
+    <TextView
+        android:id="@+id/notificationsText"
+        android:layout_alignParentRight="true"
+        android:textColor="@color/white_color"
+        android:text="4"
+        android:textSize="@dimen/activity_horizontal_margin"
+        android:padding="5dp"
+        android:layout_alignRight="@+id/notificationView"
+        android:layout_alignTop="@+id/notificationView"
+        android:background="@drawable/bubble"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
     <GridView
         android:id="@+id/appGrid"
         android:layout_below="@+id/infoView"

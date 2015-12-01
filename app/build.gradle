@@ -49,6 +49,7 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.credr.android.library:base:1.1.17'
+    compile 'de.greenrobot:eventbus:2.4.0'
     compile('com.crashlytics.sdk.android:crashlytics:2.5.2@aar') {
         transitive = true;
     }

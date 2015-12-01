@@ -9,6 +9,7 @@ import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
+import android.service.notification.StatusBarNotification;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,17 +24,22 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.credr.android.launcher.Utils.CustomViewGroup;
+import com.credr.android.launcher.Utils.NotificationStore;
 import com.credr.android.launcher.Utils.Utils;
 import com.credr.android.launcher.fragments.LoginFragment;
+import com.credr.android.launcher.fragments.NotificationFragment;
 import com.credr.android.launcher.model.AppInfo;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import de.greenrobot.event.EventBus;
+
 public class HomeActivity extends Activity {
 
     GridView appGridView;
-    ImageButton infoView;
+    ImageButton infoView, notificnView;
+    TextView notificnText;
     SharedPreferences sharedPreferences;
     FragmentManager fragmentManager;
 
@@ -49,6 +55,8 @@ public class HomeActivity extends Activity {
         }
         appGridView = (GridView)findViewById(R.id.appGrid);
         infoView = (ImageButton) findViewById(R.id.infoView);
+        notificnView = (ImageButton) findViewById(R.id.notificationView);
+        notificnText = (TextView) findViewById(R.id.notificationsText);
         fragmentManager = getFragmentManager();
         infoView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,73 +73,16 @@ public class HomeActivity extends Activity {
                 }
             }
         });
-        appGridView.setAdapter(new BaseAdapter() {
-                                   @Override
-                                   public int getCount() {
-                                       return appInfoList.size();
-                                   }
 
-                                   @Override
-                                   public AppInfo getItem(int position) {
-                                       return appInfoList.get(position);
-                                   }
 
-                                   @Override
-                                   public long getItemId(int position) {
-                                       return 0;
-                                   }
-
-                                   class Holder {
-                                       ImageView icon;
-                                       TextView label;
-
-                                       Holder(View view) {
-                                           icon = (ImageView) view.findViewById(R.id.icon);
-                                           label = (TextView) view.findViewById(R.id.label);
-                                           view.setTag(this);
-                                       }
-                                   }
-
-                                   @Override
-                                   public View getView(final int position, View convertView, ViewGroup parent) {
-                                       if (convertView == null) {
-                                           convertView = getLayoutInflater().inflate(R.layout.app_item, null);
-                                           new Holder(convertView);
-                                       }
-
-                                       Holder holder = (Holder) convertView.getTag();
-                                       AppInfo appInfo = getItem(position);
-                                       holder.icon.setImageDrawable(appInfo.icon);
-                                       holder.label.setText(appInfo.label);
-
-                                       convertView.setOnClickListener(new View.OnClickListener() {
-                                           @Override
-                                           public void onClick(View v) {
-                                               Intent i = manager.getLaunchIntentForPackage(getItem(position).name.toString());
-                                               if (getItem(position).data != null) {
-                                                   String label = getItem(position).label.toString();
-                                                   if (label.contains("WiFi")) {
-                                                       startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
-                                                       return;
-                                                   } else if (label.contains("Data")) {
-                                                       startActivity(new Intent(Settings.ACTION_APN_SETTINGS));
-                                                       return;
-                                                   } else if (label.contains("GPS")) {
-                                                       startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-                                                       return;
-                                                   } else {
-                                                       i = new Intent(HomeActivity.this, WebViewActivity.class);
-                                                       i.putExtra(WebViewActivity.URL_EXTRA, getItem(position).data);
-                                                   }
-                                               }
-                                               HomeActivity.this.startActivity(i);
-                                           }
-                                       });
-
-                                       return convertView;
-                                   }
-                               });
-
+        View.OnClickListener notificationListener =  new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fragmentManager.beginTransaction().add(R.id.relContainer, new NotificationFragment(), NotificationFragment.NOTIFICATION_FRAGMENT_TAG).commit();
+            }
+        };
+        notificnText.setOnClickListener(notificationListener);
+        notificnView.setOnClickListener(notificationListener);
         getWindow().getDecorView().setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -216,11 +167,19 @@ public class HomeActivity extends Activity {
     @Override
     public void onBackPressed() {
         dismissLoginFragment();
+        dismissNotificationFragment();
+    }
+
+    @Override
+    protected void onPause() {
+        EventBus.getDefault().unregister(this);
+        super.onPause();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        EventBus.getDefault().register(this);
         if(Utils.isLockingModeActive(HomeActivity.this)) {
             infoView.setImageDrawable(getResources().getDrawable(R.drawable.launcher_icon, getTheme()));
         } else {
@@ -294,6 +253,17 @@ public class HomeActivity extends Activity {
                 return convertView;
             }
         });
+        updateNotifications();
+    }
+
+    private void updateNotifications() {
+        Integer notfNumber = NotificationStore.getInstance().getNotifications().size();
+        if(notfNumber > 0) {
+            notificnText.setVisibility(View.VISIBLE);
+            notificnText.setText(""+notfNumber);
+        } else {
+            notificnText.setVisibility(View.GONE);
+        }
     }
 
     private void dismissLoginFragment() {
@@ -301,5 +271,21 @@ public class HomeActivity extends Activity {
         if(loginFragment!=null && loginFragment.isVisible()) {
             loginFragment.dismiss();
         }
+    }
+
+    private void dismissNotificationFragment() {
+        NotificationFragment notificationFragment = (NotificationFragment)fragmentManager.findFragmentByTag(NotificationFragment.NOTIFICATION_FRAGMENT_TAG);
+        if(notificationFragment!=null && notificationFragment.isVisible()) {
+            notificationFragment.dismiss();
+        }
+    }
+
+    public void onEvent(StatusBarNotification sbn) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                updateNotifications();
+            }
+        });
     }
 }

@@ -17,11 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.credr.android.launcher.R;
-<<<<<<< HEAD
-import com.credr.android.launcher.Utils.CustomViewGroup;
-=======
 import com.credr.android.launcher.SettingsActivity;
->>>>>>> origin/inspector_branch
 import com.credr.android.launcher.Utils.Utils;
 import com.credr.android.library.connection.REST;
 import com.credr.android.library.connection.model.request.Credentials;
@@ -60,7 +56,7 @@ public class LoginFragment extends DialogFragment implements View.OnClickListene
         password.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
-                if(actionId == EditorInfo.IME_ACTION_DONE) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
                     submitButton.performClick();
                     return true;
                 }
@@ -77,13 +73,16 @@ public class LoginFragment extends DialogFragment implements View.OnClickListene
     @Override
     public void onClick(View view) {
         if(view.getId() == R.id.btnLogin) {
-            String login = username.getText().toString();
-            String pass =  password.getText().toString();
-            if (isCredentialsValid(login, pass)){
-                progressBar.setVisibility(View.VISIBLE);
-                doLogin(login, pass);
-            } else {
-                Toast.makeText(mContext,"Please enter a valid login/password",Toast.LENGTH_SHORT).show();
+            if(view != null)startActivity(new Intent(getActivity(),SettingsActivity.class));
+            else {
+                String login = username.getText().toString();
+                String pass = password.getText().toString();
+                if (isCredentialsValid(login, pass)) {
+                    progressBar.setVisibility(View.VISIBLE);
+                    doLogin(login, pass);
+                } else {
+                    Toast.makeText(mContext, "Please enter a valid login/password", Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }
@@ -99,21 +98,7 @@ public class LoginFragment extends DialogFragment implements View.OnClickListene
                 progressBar.setVisibility(View.GONE);
                 loginResponse.user.save();
                 if(loginResponse.user.is_rm) {
-<<<<<<< HEAD
-                    try {
-                        mContext.getPackageManager().clearPackagePreferredActivities(mContext.getPackageName());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(mContext).edit();
-                    editor.putBoolean(Utils.PREF_LOCKING_MODE, false);
-                    editor.commit();
-                    Toast.makeText(mContext, "Locking mode turned off", Toast.LENGTH_SHORT).show();
-                    CustomViewGroup.getInstance(getActivity()).unlock();
-                    getActivity().finish();
-=======
                     startActivity(new Intent(getActivity(),SettingsActivity.class));
->>>>>>> origin/inspector_branch
                 } else {
                     Toast.makeText(mContext, "You do not have permissions", Toast.LENGTH_SHORT).show();
                     dismiss();
