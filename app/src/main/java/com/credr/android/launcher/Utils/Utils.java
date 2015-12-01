@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -54,7 +53,6 @@ public class Utils {
             lockingMode = jsonObject.getBoolean("locking_mode");
             JSONArray accessListArray = jsonObject.getJSONArray("access_list");
             for (int index = 0; index < accessListArray.length(); index++) {
-                Log.d("AppInfo","*** App: "+accessListArray.getString(index));
                 accessList.add(accessListArray.getString(index));
             }
         } catch (JSONException e) {
@@ -70,18 +68,59 @@ public class Utils {
         return sp.getBoolean(PREF_LOCKING_MODE, false);
     }
 
+    public static void setLockingMode(Context context, boolean lockingMode) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(PREF_LOCKING_MODE, lockingMode);
+        editor.commit();
+    }
+
     public static boolean isAppInAccessList(Context context, String packageName) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         Set<String> accessList = sp.getStringSet(PREF_ACCESS_LIST, new HashSet<String>());
-        if(accessList.contains(packageName) || packageName.equalsIgnoreCase("com.lenovo.keyguard.settings") || packageName.equalsIgnoreCase("com.android.settings") || packageName.equalsIgnoreCase("android") || packageName.equalsIgnoreCase("com.android.systemui") || packageName.equalsIgnoreCase("com.android.documentsui"))
+
+        if(accessList.contains(packageName)
+                || packageName.equalsIgnoreCase("com.lenovo.keyguard.settings")
+                || packageName.equalsIgnoreCase("com.android.settings")
+                || packageName.equalsIgnoreCase("android")
+                || packageName.equalsIgnoreCase("com.android.systemui")
+                || packageName.equalsIgnoreCase("com.android.documentsui"))
             return true;
         else
             return false;
     }
 
+    public static boolean isAppInAccessListContents(Context context, String packageName) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        Set<String> appAccessList = sp.getStringSet(PREF_ACCESS_LIST, new HashSet<String>());
+        for(String appName: appAccessList) {
+            if(packageName.contains(appName))
+                return true;
+        }
+        Set<String> accessList = new HashSet<>();
+        accessList.add("null");
+        accessList.add("com.lenovo.keyguard.settings");
+        accessList.add("com.android.settings");
+        accessList.add("com.android.systemui");
+        accessList.add("com.android.documentsui");
+        for(String appName: accessList) {
+            if(packageName.contains(appName) && !packageName.equalsIgnoreCase("com.android.vending"))
+                return true;
+        }
+        return false;
+    }
+
+
     public static boolean isKeyInPrefs(Context context, String key) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         return sp.contains(key);
+    }
+
+    public static void setAccessList (Context context, Set<String> accessList) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putStringSet(PREF_ACCESS_LIST, accessList);
+        editor.commit();
     }
 
     public static boolean isNetworkConnectionPresent(Context context) {
@@ -176,9 +215,8 @@ public class Utils {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-
-        return foregroundProcess;
+        }String process = (""+foregroundProcess).trim();
+        return process;
     }
 
     private static String read(String path) throws IOException {

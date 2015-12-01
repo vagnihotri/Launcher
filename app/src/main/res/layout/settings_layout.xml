@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/background_light">
+    <TextView
+        android:id="@+id/settings_text"
+        android:text="Launcher Settings"
+        android:layout_centerHorizontal="true"
+        android:textSize="22sp"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:id="@+id/whitelist_layout"
+        android:layout_below="@+id/settings_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/whitelist_text"
+            android:text="Add/Remove Apps"
+            android:textSize="18sp"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/whitelist_text_description"
+            android:layout_marginTop="5dp"
+            android:textColor="@android:color/darker_gray"
+            android:text="Add or Remove Apps from the whitelist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <View
+        android:id="@+id/whitelist_sep"
+        android:background="@color/btn_login_logout_bg"
+        android:layout_below="@+id/whitelist_layout"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+    <LinearLayout
+        android:id="@+id/play_store_layout"
+        android:layout_below="@+id/whitelist_sep"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:visibility="gone"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/play_store_text"
+            android:text="Open Play Store"
+            android:textSize="18sp"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/play_store_description"
+            android:layout_marginTop="5dp"
+            android:textColor="@android:color/darker_gray"
+            android:text="Install or Uninstall Apps from the Device"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <View
+        android:id="@+id/play_store_sep"
+        android:background="@color/btn_login_logout_bg"
+        android:layout_below="@+id/play_store_layout"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:layout_height="1dp"/>
+    <LinearLayout
+        android:id="@+id/exit_layout"
+        android:layout_below="@+id/play_store_sep"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/exit_text"
+            android:text="Exit Launcher"
+            android:textSize="18sp"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/exit_description"
+            android:layout_marginTop="5dp"
+            android:textColor="@android:color/darker_gray"
+            android:text="Turn Locking off and return to phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</RelativeLayout>

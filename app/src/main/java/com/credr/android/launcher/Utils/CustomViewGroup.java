@@ -38,6 +38,7 @@ public class CustomViewGroup extends ViewGroup {
 
     public void lock() {
 
+        if(lockView != null) return;
         //lock top notification/status bar
         wManager = ((WindowManager) context.getApplicationContext()
                 .getSystemService(Context.WINDOW_SERVICE));
@@ -61,6 +62,7 @@ public class CustomViewGroup extends ViewGroup {
         if (lockView!=null) {
             if (lockView.isShown()) {
                 wManager.removeView(lockView);
+                lockView = null;
             }
         }
     }

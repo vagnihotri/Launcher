@@ -100,22 +100,19 @@ public class AppListenerService extends Service {
             if(currentInfo != null) {
                 for (String packageName : currentInfo.pkgList) {
                     if(!Utils.isAppInAccessList(mContext,packageName)) {
-                        minimizeApp(packageName);
+                        minimizeApp();
                     }
+                }
+            } else {
+                if(!Utils.isAppInAccessListContents(mContext,Utils.getForegroundApp())) {
+                    minimizeApp();
                 }
             }
         }
     }
 
 
-
-    private void minimizeApp(String packageName) {
-        if(     packageName.equalsIgnoreCase("com.android.gallery3d") ||
-                packageName.equalsIgnoreCase("com.google.android.apps.plus") ||
-                packageName.equalsIgnoreCase("com.google.android.gms") ||
-                packageName.equalsIgnoreCase("com.credr.android.library") ||
-                packageName.equalsIgnoreCase("com.google.android.play.games") ||
-                packageName.equalsIgnoreCase(appPackageName)) return;
+    private void minimizeApp() {
         Intent intent = new Intent();
         intent
                 .setAction(Intent.ACTION_MAIN)
