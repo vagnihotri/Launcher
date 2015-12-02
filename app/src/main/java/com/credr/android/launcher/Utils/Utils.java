@@ -106,6 +106,9 @@ public class Utils {
         accessList.add("com.android.settings");
         accessList.add("com.android.systemui");
         accessList.add("com.android.documentsui");
+        accessList.add("android.process.media");
+        accessList.add("com.android.providers.calendar");
+        accessList.add("com.google.process.gapps");
         for(String appName: accessList) {
             if(packageName.contains(appName) && !packageName.equalsIgnoreCase("com.android.vending"))
                 return true;
@@ -203,7 +206,13 @@ public class Utils {
 
                 File oomScoreAdj = new File(String.format("/proc/%d/oom_score_adj", pid));
                 if (oomScoreAdj.canRead()) {
-                    int oomAdj = Integer.parseInt(read(oomScoreAdj.getAbsolutePath().trim()));
+                    int oomAdj;
+                    try {
+                        oomAdj = Integer.parseInt(read(oomScoreAdj.getAbsolutePath().trim()));
+                    } catch (NumberFormatException e) {
+                        String oomAdjWithNewLine = read(oomScoreAdj.getAbsolutePath().trim());
+                        oomAdj = Integer.parseInt(oomAdjWithNewLine.replaceAll("\\r|\\n", ""));
+                    }
                     if (oomAdj != 0) {
                         continue;
                     }
