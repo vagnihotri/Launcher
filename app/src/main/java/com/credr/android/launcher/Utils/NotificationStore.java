@@ -32,6 +32,9 @@ public class NotificationStore {
         notificationList.remove(statusBarNotification);
     }
 
+    public void removeAllNotifications() {
+        notificationList.clear();
+    }
     public ArrayList<StatusBarNotification> getNotifications() {
         return notificationList;
     }

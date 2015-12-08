@@ -2,6 +2,7 @@ package com.credr.android.launcher;
 
 import android.app.Activity;
 import android.app.FragmentManager;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -35,7 +36,7 @@ import java.util.List;
 
 import de.greenrobot.event.EventBus;
 
-public class HomeActivity extends Activity {
+public class HomeActivity extends Activity implements DialogInterface.OnDismissListener {
 
     GridView appGridView;
     ImageButton infoView, notificnView;
@@ -269,6 +270,7 @@ public class HomeActivity extends Activity {
     private void dismissLoginFragment() {
         LoginFragment loginFragment = (LoginFragment)fragmentManager.findFragmentByTag(LoginFragment.LOGIN_FRAGMENT_TAG);
         if(loginFragment!=null && loginFragment.isVisible()) {
+            updateNotifications();
             loginFragment.dismiss();
         }
     }
@@ -276,6 +278,7 @@ public class HomeActivity extends Activity {
     private void dismissNotificationFragment() {
         NotificationFragment notificationFragment = (NotificationFragment)fragmentManager.findFragmentByTag(NotificationFragment.NOTIFICATION_FRAGMENT_TAG);
         if(notificationFragment!=null && notificationFragment.isVisible()) {
+            updateNotifications();
             notificationFragment.dismiss();
         }
     }
@@ -287,5 +290,10 @@ public class HomeActivity extends Activity {
                 updateNotifications();
             }
         });
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialogInterface) {
+        updateNotifications();
     }
 }
