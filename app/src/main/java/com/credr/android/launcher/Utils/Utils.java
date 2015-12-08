@@ -218,7 +218,13 @@ public class Utils {
                     }
                 }
 
-                int oomscore = Integer.parseInt(read(String.format("/proc/%d/oom_score", pid)));
+                int oomscore;
+                try {
+                    oomscore = Integer.parseInt(read(String.format("/proc/%d/oom_score", pid)));
+                } catch (NumberFormatException e) {
+                    String oomscoreWithNewLine = read(String.format("/proc/%d/oom_score", pid));
+                    oomscore  = Integer.parseInt(oomscoreWithNewLine.trim().replaceAll("\\r|\\n", ""));
+                }
                 if (oomscore < lowestOomScore) {
                     lowestOomScore = oomscore;
                     foregroundProcess = cmdline;
