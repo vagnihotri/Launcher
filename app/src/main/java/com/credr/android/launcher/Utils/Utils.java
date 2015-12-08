@@ -109,6 +109,7 @@ public class Utils {
         accessList.add("android.process.media");
         accessList.add("com.android.providers.calendar");
         accessList.add("com.google.process.gapps");
+        accessList.add("com.lenovo.locationservice");
         for(String appName: accessList) {
             if(packageName.contains(appName) && !packageName.equalsIgnoreCase("com.android.vending"))
                 return true;
