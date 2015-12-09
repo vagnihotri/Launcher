@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.RemoteViews;
 
@@ -29,7 +30,7 @@ public class NotificationFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View cView = inflater.inflate(R.layout.notification_layout, null);
-        final RelativeLayout containerView = (RelativeLayout)cView.findViewById(R.id.notifcnContainer);
+        final LinearLayout containerView = (LinearLayout)cView.findViewById(R.id.notifcnContainer);
         List<StatusBarNotification> notificationList = NotificationStore.getInstance().getNotifications();
         int index = Integer.MAX_VALUE;
         for(final StatusBarNotification statusBarNotification : notificationList) {
