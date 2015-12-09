@@ -11,20 +11,20 @@
         android:textSize="22sp"
         android:textColor="@android:color/black"
         android:textStyle="bold"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="35dp"
         android:layout_marginBottom="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     <ImageView
         android:id="@+id/dismiss_icon"
-        android:src="@drawable/ham"
+        android:src="@drawable/clear_notificn"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="25dp"
         android:layout_marginBottom="20dp"
         android:layout_marginRight="20dp"
-        android:layout_width="40dp"
-        android:layout_height="40dp" />
+        android:layout_width="48dp"
+        android:layout_height="48dp" />
 
     <ScrollView
         android:layout_below="@+id/notifcns_text"
