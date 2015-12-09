@@ -16,6 +16,7 @@ public class SbNotificationListenerService extends NotificationListenerService {
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
         if(Utils.isAppInAccessList(getBaseContext(),sbn.getPackageName())) {
+            if(sbn.getPackageName().equalsIgnoreCase("android")) return;
             NotificationStore.getInstance().addNotification(sbn);
             EventBus.getDefault().post(sbn);
         }
