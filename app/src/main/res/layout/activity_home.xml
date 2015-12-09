@@ -1,48 +1,53 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:layout_height="match_parent"
     android:background="@drawable/background">
 
-    <ImageButton
-        android:layout_centerHorizontal="true"
-        android:id="@+id/infoView"
-        android:src="@drawable/launcher_icon"
-        android:layout_width="75dp"
-        android:layout_height="75dp"
-        android:layout_marginBottom="5dp"
-        android:text="Toggle"
-        android:background="@null"
-        android:gravity="center"/>
+    <RelativeLayout
+        android:id="@+id/actionView"
+        android:background="#80FFFFFF"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageButton
+            android:layout_centerHorizontal="true"
+            android:id="@+id/infoView"
+            android:src="@drawable/launcher_icon"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_marginBottom="5dp"
+            android:text="Toggle"
+            android:background="@null"
+            android:gravity="center"/>
 
-    <ImageButton
-        android:layout_alignParentRight="true"
-        android:id="@+id/notificationView"
-        android:src="@drawable/notification"
-        android:scaleType="fitXY"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_margin="10dp"
-        android:text="Toggle"
-        android:background="@null"/>
-    <TextView
-        android:id="@+id/notificationsText"
-        android:layout_alignParentRight="true"
-        android:textColor="@color/white_color"
-        android:text="4"
-        android:textSize="@dimen/activity_horizontal_margin"
-        android:padding="5dp"
-        android:layout_alignRight="@+id/notificationView"
-        android:layout_alignTop="@+id/notificationView"
-        android:background="@drawable/bubble"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
+        <ImageButton
+            android:layout_alignParentRight="true"
+            android:id="@+id/notificationView"
+            android:src="@drawable/bell_yellow"
+            android:scaleType="fitXY"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_margin="10dp"
+            android:text="Toggle"
+            android:background="@null"/>
+        <TextView
+            android:id="@+id/notificationsText"
+            android:layout_alignParentRight="true"
+            android:textColor="@color/white_color"
+            android:text="4"
+            android:textSize="@dimen/activity_horizontal_margin"
+            android:padding="5dp"
+            android:layout_alignRight="@+id/notificationView"
+            android:layout_alignTop="@+id/notificationView"
+            android:background="@drawable/bubble"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
     <GridView
         android:id="@+id/appGrid"
-        android:layout_below="@+id/infoView"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:layout_below="@+id/actionView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:columnWidth="60dp"
