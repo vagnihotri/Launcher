@@ -73,16 +73,13 @@ public class LoginFragment extends DialogFragment implements View.OnClickListene
     @Override
     public void onClick(View view) {
         if(view.getId() == R.id.btnLogin) {
-            if(view != null)startActivity(new Intent(getActivity(),SettingsActivity.class));
-            else {
-                String login = username.getText().toString();
-                String pass = password.getText().toString();
-                if (isCredentialsValid(login, pass)) {
-                    progressBar.setVisibility(View.VISIBLE);
-                    doLogin(login, pass);
-                } else {
-                    Toast.makeText(mContext, "Please enter a valid login/password", Toast.LENGTH_SHORT).show();
-                }
+            String login = username.getText().toString();
+            String pass = password.getText().toString();
+            if (isCredentialsValid(login, pass)) {
+                progressBar.setVisibility(View.VISIBLE);
+                doLogin(login, pass);
+            } else {
+                Toast.makeText(mContext, "Please enter a valid login/password", Toast.LENGTH_SHORT).show();
             }
         }
     }
