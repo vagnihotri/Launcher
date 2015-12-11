@@ -61,6 +61,7 @@ public class SettingsActivity extends Activity implements View.OnClickListener{
         List<ResolveInfo> availableApps = packageManager.queryIntentActivities(intent,0);
         for(ResolveInfo resolveInfo : availableApps) {
             AppInfo appInfo = new AppInfo();
+            appInfo.resolveInfo = resolveInfo;
             appInfo.label = resolveInfo.loadLabel(packageManager);
             appInfo.name = resolveInfo.activityInfo.packageName;
             appInfo.icon = resolveInfo.activityInfo.loadIcon(packageManager);

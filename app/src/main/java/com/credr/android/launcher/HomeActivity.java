@@ -2,16 +2,17 @@ package com.credr.android.launcher;
 
 import android.app.Activity;
 import android.app.FragmentManager;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.service.notification.StatusBarNotification;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -124,9 +125,9 @@ public class HomeActivity extends Activity implements DialogInterface.OnDismissL
         List<ResolveInfo> availableApps = manager.queryIntentActivities(intent,0);
         for(ResolveInfo resolveInfo : availableApps) {
             AppInfo appInfo = new AppInfo();
+            appInfo.resolveInfo = resolveInfo;
             appInfo.label = resolveInfo.loadLabel(manager);
             appInfo.name = resolveInfo.activityInfo.packageName;
-            logInfo(appInfo.name);
             appInfo.icon = resolveInfo.activityInfo.loadIcon(manager);
             if(Utils.isAppInAccessList(HomeActivity.this, appInfo.name.toString()) && !appInfo.name.toString().equalsIgnoreCase("com.android.settings") && !appInfo.name.toString().equalsIgnoreCase("com.credr.android.launcher"))
                 appInfoList.add(appInfo);
@@ -159,10 +160,6 @@ public class HomeActivity extends Activity implements DialogInterface.OnDismissL
         appInfo.data = "http://www.credr.com";
         appInfo.icon = getResources().getDrawable(R.drawable.gps,getTheme());
         appInfoList.add(appInfo);
-    }
-
-    void logInfo(Object info) {
-        Log.d("Apps", String.valueOf(info));
     }
 
     @Override
@@ -246,6 +243,9 @@ public class HomeActivity extends Activity implements DialogInterface.OnDismissL
                                 i = new Intent(HomeActivity.this, WebViewActivity.class);
                                 i.putExtra(WebViewActivity.URL_EXTRA, getItem(position).data);
                             }
+                        } else if(getItem(position).name.toString().contains("ideafriend")) {
+                            startActivity(getItem(position).resolveInfo);
+                            return;
                         }
                         HomeActivity.this.startActivity(i);
                     }
@@ -295,5 +295,19 @@ public class HomeActivity extends Activity implements DialogInterface.OnDismissL
     @Override
     public void onDismiss(DialogInterface dialogInterface) {
         updateNotifications();
+    }
+
+    public void startActivity(ResolveInfo launchableActivity) {
+        ActivityInfo activity=launchableActivity.activityInfo;
+        ComponentName name=new ComponentName(activity.applicationInfo.packageName,
+                activity.name);
+        Intent i=new Intent(Intent.ACTION_MAIN);
+
+        i.addCategory(Intent.CATEGORY_LAUNCHER);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
+                Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+        i.setComponent(name);
+
+        startActivity(i);
     }
 }
