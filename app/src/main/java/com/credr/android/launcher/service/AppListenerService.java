@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.credr.android.launcher.Utils.Analytics;
 import com.credr.android.launcher.Utils.Utils;
 
 import java.lang.reflect.Field;
@@ -99,20 +100,22 @@ public class AppListenerService extends Service {
             }
             if(currentInfo != null) {
                 for (String packageName : currentInfo.pkgList) {
-                    if(!Utils.isAppInAccessList(mContext,packageName)) {
-                        minimizeApp();
+                    if(!Utils.isAppInAccessList(mContext, packageName)) {
+                        minimizeApp(packageName);
                     }
                 }
             } else {
-                if(!Utils.isAppInAccessListContents(mContext,Utils.getForegroundApp())) {
-                    minimizeApp();
+                String packageName = Utils.getForegroundApp();
+                if(!Utils.isAppInAccessListContents(mContext, packageName)) {
+                    minimizeApp(packageName);
                 }
             }
         }
     }
 
 
-    private void minimizeApp() {
+    private void minimizeApp(String appPackageName) {
+        Analytics.getInstance().logData(Analytics.EventKeys.MINIMIZE_APP, appPackageName);
         Intent intent = new Intent();
         intent
                 .setAction(Intent.ACTION_MAIN)

@@ -1,9 +1,4 @@
 <resources>
     <string name="app_name">CredR Launcher</string>
-
-    <string name="hello">Hello World, AppLockerActivity!</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
-    <string name="appLockerPreferenceActivityName">App Locker Preference</string>
-    <string name="service_running">Service is Running</string>
+    <string name="datagrinch_api_key">app56711b374f7f3c762c3baa6b</string>
 </resources>

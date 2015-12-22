@@ -25,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.credr.android.launcher.Utils.Analytics;
 import com.credr.android.launcher.Utils.CustomViewGroup;
 import com.credr.android.launcher.Utils.NotificationStore;
 import com.credr.android.launcher.Utils.Utils;
@@ -49,6 +50,9 @@ public class HomeActivity extends Activity implements DialogInterface.OnDismissL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        // Start session
+        Analytics.getInstance().startSession();
+
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         if(Utils.isLockingModeActive(HomeActivity.this)) {
             CustomViewGroup.getInstance(this).lock();
@@ -102,16 +106,6 @@ public class HomeActivity extends Activity implements DialogInterface.OnDismissL
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -171,12 +165,14 @@ public class HomeActivity extends Activity implements DialogInterface.OnDismissL
     @Override
     protected void onPause() {
         EventBus.getDefault().unregister(this);
+        Analytics.getInstance().stopEventTracking();
         super.onPause();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        Analytics.getInstance().startEventTracking();
         EventBus.getDefault().register(this);
         if(Utils.isLockingModeActive(HomeActivity.this)) {
             infoView.setImageDrawable(getResources().getDrawable(R.drawable.launcher_icon, getTheme()));
@@ -309,5 +305,11 @@ public class HomeActivity extends Activity implements DialogInterface.OnDismissL
         i.setComponent(name);
 
         startActivity(i);
+    }
+
+    @Override
+    public void onDestroy(){
+        Analytics.getInstance().endSession();
+        super.onDestroy();
     }
 }

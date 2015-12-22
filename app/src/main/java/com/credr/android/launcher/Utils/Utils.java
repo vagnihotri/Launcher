@@ -111,6 +111,8 @@ public class Utils {
         accessList.add("com.google.process.gapps");
         accessList.add("com.lenovo.locationservice");
         accessList.add("com.google.android.apps.plus");
+        accessList.add("com.lenovo.secretcode");
+        accessList.add("android.process.acore");
         for(String appName: accessList) {
             if(packageName.contains(appName) && !packageName.equalsIgnoreCase("com.android.vending"))
                 return true;

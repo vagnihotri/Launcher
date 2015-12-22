@@ -3,6 +3,11 @@
     package="com.credr.android.launcher" >
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+
     <application
         android:name=".CredRLauncherApplication"
         android:allowBackup="true"
@@ -43,6 +48,12 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="c805aefb5c5c2d9cfec745fc47c37ee3a4985180" />
+        <receiver
+            android:name="com.cloud.datagrinchsdk.utils.receivers.DataGrinchNetworkChangeReceiver" >
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
     </application>
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
