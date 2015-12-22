@@ -1,6 +1,7 @@
 package com.credr.android.launcher;
 
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.content.ComponentName;
 import android.content.DialogInterface;
@@ -29,6 +30,7 @@ import com.credr.android.launcher.Utils.Analytics;
 import com.credr.android.launcher.Utils.CustomViewGroup;
 import com.credr.android.launcher.Utils.NotificationStore;
 import com.credr.android.launcher.Utils.Utils;
+import com.credr.android.launcher.fragments.BrightnessFragment;
 import com.credr.android.launcher.fragments.LoginFragment;
 import com.credr.android.launcher.fragments.NotificationFragment;
 import com.credr.android.launcher.model.AppInfo;
@@ -154,12 +156,18 @@ public class HomeActivity extends Activity implements DialogInterface.OnDismissL
         appInfo.data = "http://www.credr.com";
         appInfo.icon = getResources().getDrawable(R.drawable.gps,getTheme());
         appInfoList.add(appInfo);
+
+        appInfo = new AppInfo();
+        appInfo.label = "Brightness Settings";
+        appInfo.name = "com.android.chrome";
+        appInfo.data = "http://www.credr.com";
+        appInfo.icon = getResources().getDrawable(R.drawable.brightness,getTheme());
+        appInfoList.add(appInfo);
     }
 
     @Override
     public void onBackPressed() {
-        dismissLoginFragment();
-        dismissNotificationFragment();
+        dismissAllFragments();
     }
 
     @Override
@@ -179,7 +187,7 @@ public class HomeActivity extends Activity implements DialogInterface.OnDismissL
         } else {
             infoView.setImageDrawable(getResources().getDrawable(R.drawable.unlock, getTheme()));
         }
-        dismissLoginFragment();
+        dismissAllFragments();
         loadApps();
         appGridView.setAdapter(new BaseAdapter() {
             @Override
@@ -235,11 +243,16 @@ public class HomeActivity extends Activity implements DialogInterface.OnDismissL
                             } else if (label.contains("GPS")) {
                                 startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
                                 return;
+                            } else if (label.contains("Brightness")) {
+                                if(!brightnessFragmentVisible()) {
+                                    fragmentManager.beginTransaction().add(R.id.relContainer, new BrightnessFragment(), BrightnessFragment.BRIGHTNESS_FRAGMENT_TAG).commit();
+                                }
+                                return;
                             } else {
                                 i = new Intent(HomeActivity.this, WebViewActivity.class);
                                 i.putExtra(WebViewActivity.URL_EXTRA, getItem(position).data);
                             }
-                        } else if(getItem(position).name.toString().contains("ideafriend")) {
+                        } else if (getItem(position).name.toString().contains("ideafriend")) {
                             startActivity(getItem(position).resolveInfo);
                             return;
                         }
@@ -253,6 +266,21 @@ public class HomeActivity extends Activity implements DialogInterface.OnDismissL
         updateNotifications();
     }
 
+    private boolean brightnessFragmentVisible() {
+        BrightnessFragment brightnessFragment = (BrightnessFragment)fragmentManager.findFragmentByTag(BrightnessFragment.BRIGHTNESS_FRAGMENT_TAG);
+        if(brightnessFragment !=null && brightnessFragment.isVisible()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private void dismissAllFragments() {
+        dismissDialogFragmentByTag(NotificationFragment.NOTIFICATION_FRAGMENT_TAG);
+        dismissDialogFragmentByTag(LoginFragment.LOGIN_FRAGMENT_TAG);
+        dismissDialogFragmentByTag(BrightnessFragment.BRIGHTNESS_FRAGMENT_TAG);
+    }
+
     private void updateNotifications() {
         Integer notfNumber = NotificationStore.getInstance().getNotifications().size();
         if(notfNumber > 0) {
@@ -263,19 +291,11 @@ public class HomeActivity extends Activity implements DialogInterface.OnDismissL
         }
     }
 
-    private void dismissLoginFragment() {
-        LoginFragment loginFragment = (LoginFragment)fragmentManager.findFragmentByTag(LoginFragment.LOGIN_FRAGMENT_TAG);
-        if(loginFragment!=null && loginFragment.isVisible()) {
+    private void dismissDialogFragmentByTag(String tag) {
+        DialogFragment fragment = (DialogFragment)fragmentManager.findFragmentByTag(tag);
+        if(fragment !=null && fragment.isVisible()) {
             updateNotifications();
-            loginFragment.dismiss();
-        }
-    }
-
-    private void dismissNotificationFragment() {
-        NotificationFragment notificationFragment = (NotificationFragment)fragmentManager.findFragmentByTag(NotificationFragment.NOTIFICATION_FRAGMENT_TAG);
-        if(notificationFragment!=null && notificationFragment.isVisible()) {
-            updateNotifications();
-            notificationFragment.dismiss();
+            fragment.dismiss();
         }
     }
 
