@@ -7,6 +7,7 @@
         android:id="@+id/actionView"
         android:background="#80FFFFFF"
         android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingTop="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -25,6 +26,17 @@
             android:layout_alignParentRight="true"
             android:id="@+id/notificationView"
             android:src="@drawable/bell_yellow"
+            android:scaleType="fitXY"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_margin="10dp"
+            android:text="Toggle"
+            android:background="@null"/>
+
+        <ImageButton
+            android:layout_alignParentLeft="true"
+            android:id="@+id/settingsView"
+            android:src="@drawable/settings"
             android:scaleType="fitXY"
             android:layout_width="60dp"
             android:layout_height="60dp"

@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:clickable="true">
+
+    <RelativeLayout
+        android:background="@color/white_color"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/preferences_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="Launcher Preferences"
+            android:textAlignment="center"
+            android:textColor="@android:color/black"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <RelativeLayout
+            android:id="@+id/brightness_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/preferences_text"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="@dimen/activity_vertical_margin">
+
+            <TextView
+                android:id="@+id/brightness_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Brightness Preferences"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/change_brightness_text"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/brightness_text"
+                android:layout_margin="@dimen/activity_horizontal_margin"
+                android:text="Slide the bar to change the brightness:"
+                android:textColor="@android:color/black" />
+
+            <SeekBar
+                android:id="@+id/brightness_seekbar"
+                android:progressTint="@color/upper_tab"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/change_brightness_text"
+                android:layout_marginLeft="30dip"
+                android:layout_marginRight="30dip" />
+
+            <CheckBox
+                android:id="@+id/automatic_checkbox"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/brightness_seekbar"
+                android:layout_margin="@dimen/activity_horizontal_margin"
+                android:text="Automatic brightness"
+                android:buttonTint="@color/upper_tab"
+                android:textColor="@android:color/black" />
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/wifi_whitelist_sep"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/brightness_layout"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/btn_login_logout_bg" />
+
+        <LinearLayout
+            android:id="@+id/wifi_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/wifi_whitelist_sep"
+            android:layout_margin="16dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/wifi_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="WiFi Preferences"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <View
+            android:id="@+id/data_whitelist_sep"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/wifi_layout"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/btn_login_logout_bg" />
+
+        <LinearLayout
+            android:id="@+id/data_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/data_whitelist_sep"
+            android:layout_margin="16dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/data_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Data Preferences"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <View
+            android:id="@+id/gps_whitelist_sep"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/data_layout"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/btn_login_logout_bg" />
+
+        <LinearLayout
+            android:id="@+id/gps_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/gps_whitelist_sep"
+            android:layout_margin="16dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/gps_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="GPS Preferences"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+        <View
+            android:id="@+id/brightness_whitelist_sep"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/gps_layout"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/btn_login_logout_bg" />
+    </RelativeLayout>
+</RelativeLayout>

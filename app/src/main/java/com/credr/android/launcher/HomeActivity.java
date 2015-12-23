@@ -12,7 +12,6 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.provider.Settings;
 import android.service.notification.StatusBarNotification;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,9 +29,9 @@ import com.credr.android.launcher.Utils.Analytics;
 import com.credr.android.launcher.Utils.CustomViewGroup;
 import com.credr.android.launcher.Utils.NotificationStore;
 import com.credr.android.launcher.Utils.Utils;
-import com.credr.android.launcher.fragments.BrightnessFragment;
 import com.credr.android.launcher.fragments.LoginFragment;
 import com.credr.android.launcher.fragments.NotificationFragment;
+import com.credr.android.launcher.fragments.PreferencesFragment;
 import com.credr.android.launcher.model.AppInfo;
 
 import java.util.ArrayList;
@@ -43,7 +42,7 @@ import de.greenrobot.event.EventBus;
 public class HomeActivity extends Activity implements DialogInterface.OnDismissListener {
 
     GridView appGridView;
-    ImageButton infoView, notificnView;
+    ImageButton infoView, notificnView, settingsView;
     TextView notificnText;
     SharedPreferences sharedPreferences;
     FragmentManager fragmentManager;
@@ -63,6 +62,7 @@ public class HomeActivity extends Activity implements DialogInterface.OnDismissL
         }
         appGridView = (GridView)findViewById(R.id.appGrid);
         infoView = (ImageButton) findViewById(R.id.infoView);
+        settingsView = (ImageButton) findViewById(R.id.settingsView);
         notificnView = (ImageButton) findViewById(R.id.notificationView);
         notificnText = (TextView) findViewById(R.id.notificationsText);
         fragmentManager = getFragmentManager();
@@ -97,6 +97,14 @@ public class HomeActivity extends Activity implements DialogInterface.OnDismissL
                 return true;
             }
         });
+
+        settingsView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fragmentManager.beginTransaction().add(R.id.relContainer, new PreferencesFragment(), PreferencesFragment.PREFERENCES_FRAGMENT_TAG).commit();
+            }
+        });
+
     }
 
     @Override
@@ -135,39 +143,12 @@ public class HomeActivity extends Activity implements DialogInterface.OnDismissL
         appInfo.data = "http://www.credr.com/";
         appInfo.icon = getResources().getDrawable(R.drawable.credr,getTheme());
         appInfoList.add(appInfo);
-
-        appInfo = new AppInfo();
-        appInfo.label = "WiFi Settings";
-        appInfo.name = "com.android.chrome";
-        appInfo.data = "http://www.credr.com";
-        appInfo.icon = getResources().getDrawable(R.drawable.wifi,getTheme());
-        appInfoList.add(appInfo);
-
-        appInfo = new AppInfo();
-        appInfo.label = "Data Settings";
-        appInfo.name = "com.android.chrome";
-        appInfo.data = "http://www.credr.com";
-        appInfo.icon = getResources().getDrawable(R.drawable.apn,getTheme());
-        appInfoList.add(appInfo);
-
-        appInfo = new AppInfo();
-        appInfo.label = "GPS Settings";
-        appInfo.name = "com.android.chrome";
-        appInfo.data = "http://www.credr.com";
-        appInfo.icon = getResources().getDrawable(R.drawable.gps,getTheme());
-        appInfoList.add(appInfo);
-
-        appInfo = new AppInfo();
-        appInfo.label = "Brightness Settings";
-        appInfo.name = "com.android.chrome";
-        appInfo.data = "http://www.credr.com";
-        appInfo.icon = getResources().getDrawable(R.drawable.brightness,getTheme());
-        appInfoList.add(appInfo);
     }
 
     @Override
     public void onBackPressed() {
-        dismissAllFragments();
+        dismissNonSettingsFragments();
+        dismissDialogFragmentByTag(PreferencesFragment.PREFERENCES_FRAGMENT_TAG);
     }
 
     @Override
@@ -187,7 +168,7 @@ public class HomeActivity extends Activity implements DialogInterface.OnDismissL
         } else {
             infoView.setImageDrawable(getResources().getDrawable(R.drawable.unlock, getTheme()));
         }
-        dismissAllFragments();
+        dismissNonSettingsFragments();
         loadApps();
         appGridView.setAdapter(new BaseAdapter() {
             @Override
@@ -233,25 +214,8 @@ public class HomeActivity extends Activity implements DialogInterface.OnDismissL
                     public void onClick(View v) {
                         Intent i = manager.getLaunchIntentForPackage(getItem(position).name.toString());
                         if (getItem(position).data != null) {
-                            String label = getItem(position).label.toString();
-                            if (label.contains("WiFi")) {
-                                startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
-                                return;
-                            } else if (label.contains("Data")) {
-                                startActivity(new Intent(Settings.ACTION_APN_SETTINGS));
-                                return;
-                            } else if (label.contains("GPS")) {
-                                startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-                                return;
-                            } else if (label.contains("Brightness")) {
-                                if(!brightnessFragmentVisible()) {
-                                    fragmentManager.beginTransaction().add(R.id.relContainer, new BrightnessFragment(), BrightnessFragment.BRIGHTNESS_FRAGMENT_TAG).commit();
-                                }
-                                return;
-                            } else {
-                                i = new Intent(HomeActivity.this, WebViewActivity.class);
-                                i.putExtra(WebViewActivity.URL_EXTRA, getItem(position).data);
-                            }
+                            i = new Intent(HomeActivity.this, WebViewActivity.class);
+                            i.putExtra(WebViewActivity.URL_EXTRA, getItem(position).data);
                         } else if (getItem(position).name.toString().contains("ideafriend")) {
                             startActivity(getItem(position).resolveInfo);
                             return;
@@ -266,19 +230,9 @@ public class HomeActivity extends Activity implements DialogInterface.OnDismissL
         updateNotifications();
     }
 
-    private boolean brightnessFragmentVisible() {
-        BrightnessFragment brightnessFragment = (BrightnessFragment)fragmentManager.findFragmentByTag(BrightnessFragment.BRIGHTNESS_FRAGMENT_TAG);
-        if(brightnessFragment !=null && brightnessFragment.isVisible()) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    private void dismissAllFragments() {
+    private void dismissNonSettingsFragments() {
         dismissDialogFragmentByTag(NotificationFragment.NOTIFICATION_FRAGMENT_TAG);
         dismissDialogFragmentByTag(LoginFragment.LOGIN_FRAGMENT_TAG);
-        dismissDialogFragmentByTag(BrightnessFragment.BRIGHTNESS_FRAGMENT_TAG);
     }
 
     private void updateNotifications() {
