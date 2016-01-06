@@ -103,16 +103,11 @@ public class Utils {
         Set<String> accessList = new HashSet<>();
         accessList.add("null");
         accessList.add("com.lenovo.keyguard.settings");
-        accessList.add("com.android.settings");
-        accessList.add("com.android.systemui");
-        accessList.add("com.android.documentsui");
-        accessList.add("android.process.media");
-        accessList.add("com.android.providers.calendar");
-        accessList.add("com.google.process.gapps");
         accessList.add("com.lenovo.locationservice");
-        accessList.add("com.google.android.apps.plus");
         accessList.add("com.lenovo.secretcode");
-        accessList.add("android.process.acore");
+        accessList.add("com.android");
+        accessList.add("com.google");
+        accessList.add("android.process");
         for(String appName: accessList) {
             if(packageName.contains(appName) && !packageName.equalsIgnoreCase("com.android.vending"))
                 return true;
